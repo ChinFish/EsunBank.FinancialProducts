@@ -1,0 +1,21 @@
+@model EsunBank.FinancialProducts.ViewModels.LikeProductFormViewModel
+
+@{
+    ViewData["Title"] = "新增喜好金融商品";
+}
+
+<h1 class="h3 mb-4">新增喜好金融商品</h1>
+
+<form asp-action="Create" method="post" class="needs-validation">
+    @Html.AntiForgeryToken()
+    <partial name="_Form" model="Model" />
+
+    <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">儲存</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">返回清單</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

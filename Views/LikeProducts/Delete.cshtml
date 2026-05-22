@@ -1,0 +1,30 @@
+@model EsunBank.FinancialProducts.ViewModels.LikeProductListItemViewModel
+
+@{
+    ViewData["Title"] = "刪除喜好金融商品";
+}
+
+<h1 class="h3 mb-3">刪除喜好金融商品</h1>
+
+<div class="alert alert-warning" role="alert">
+    確定要刪除「@Model.ProductName」這筆喜好金融商品嗎？此動作會移除喜好清單資料，若商品未被其他喜好清單使用，也會一併移除商品資料。
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">使用者</dt>
+    <dd class="col-sm-9">@Model.UserName (@Model.UserId)</dd>
+
+    <dt class="col-sm-3">扣款帳號</dt>
+    <dd class="col-sm-9">@Model.DebitAccount</dd>
+
+    <dt class="col-sm-3">預計扣款總金額</dt>
+    <dd class="col-sm-9">@Model.TotalAmount.ToString("N2")</dd>
+</dl>
+
+<form asp-action="Delete" asp-route-id="@Model.Sn" method="post">
+    @Html.AntiForgeryToken()
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-danger">確認刪除</button>
+        <a asp-action="Details" asp-route-id="@Model.Sn" class="btn btn-outline-secondary">取消</a>
+    </div>
+</form>

@@ -1,0 +1,45 @@
+@model EsunBank.FinancialProducts.ViewModels.LikeProductFormViewModel
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+<input asp-for="Sn" type="hidden" />
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="UserId" class="form-label"></label>
+        <select asp-for="UserId" class="form-select" asp-items="@(new SelectList(Model.Users, "UserId", "DisplayName"))">
+            <option value="">請選擇使用者</option>
+        </select>
+        <span asp-validation-for="UserId" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="Account" class="form-label"></label>
+        <input asp-for="Account" class="form-control" inputmode="numeric" autocomplete="off" />
+        <span asp-validation-for="Account" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="ProductName" class="form-label"></label>
+        <input asp-for="ProductName" class="form-control" autocomplete="off" />
+        <span asp-validation-for="ProductName" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" class="form-control" type="number" min="1" step="0.01" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="FeeRate" class="form-label"></label>
+        <input asp-for="FeeRate" class="form-control" type="number" min="0" max="1" step="0.0001" />
+        <span asp-validation-for="FeeRate" class="text-danger"></span>
+        <div class="form-text">例如 0.01 代表 1%</div>
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="PurchaseQuantity" class="form-label"></label>
+        <input asp-for="PurchaseQuantity" class="form-control" type="number" min="1" step="1" />
+        <span asp-validation-for="PurchaseQuantity" class="text-danger"></span>
+    </div>
+</div>

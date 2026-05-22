@@ -1,0 +1,83 @@
+@model EsunBank.FinancialProducts.ViewModels.LikeProductIndexViewModel
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "喜好金融商品清單";
+}
+
+<div class="d-flex align-items-center justify-content-between gap-3 mb-4">
+    <div>
+        <h1 class="h3 mb-1">喜好金融商品清單</h1>
+        <p class="text-muted mb-0">查詢使用者喜好的金融商品、扣款帳號、預計扣款金額與手續費。</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">新增喜好商品</a>
+</div>
+
+@if (TempData["SuccessMessage"] is string successMessage)
+{
+    <div class="alert alert-success" role="alert">@successMessage</div>
+}
+
+<form asp-action="Index" method="get" class="row g-2 align-items-end mb-4">
+    <div class="col-md-5">
+        <label for="userId" class="form-label">使用者篩選</label>
+        <select id="userId" name="userId" class="form-select" asp-items="@(new SelectList(Model.Users, "UserId", "DisplayName", Model.SelectedUserId))">
+            <option value="">全部使用者</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-primary">查詢</button>
+    </div>
+    <div class="col-auto">
+        <a asp-action="Index" class="btn btn-outline-secondary">清除</a>
+    </div>
+</form>
+
+@if (Model.Items.Count == 0)
+{
+    <div class="alert alert-info">目前沒有喜好金融商品資料。</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+            <tr>
+                <th>產品名稱</th>
+                <th>使用者</th>
+                <th class="text-nowrap">扣款帳號</th>
+                <th class="text-end text-nowrap">價格</th>
+                <th class="text-end text-nowrap">數量</th>
+                <th class="text-end text-nowrap">手續費率</th>
+                <th class="text-end text-nowrap">總手續費</th>
+                <th class="text-end text-nowrap">預計扣款總金額</th>
+                <th>Email</th>
+                <th class="text-end text-nowrap">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.UserName</td>
+                    <td class="text-nowrap">@item.DebitAccount</td>
+                    <td class="text-end text-nowrap">@item.Price.ToString("N2")</td>
+                    <td class="text-end text-nowrap">@item.PurchaseQuantity</td>
+                    <td class="text-end text-nowrap">@item.FeeRate.ToString("P2")</td>
+                    <td class="text-end text-nowrap">@item.TotalFee.ToString("N2")</td>
+                    <td class="text-end text-nowrap">@item.TotalAmount.ToString("N2")</td>
+                    <td>@item.Email</td>
+                    <td class="text-end text-nowrap">
+                        <div class="btn-group btn-group-sm" role="group" aria-label="操作">
+                            <a asp-action="Details" asp-route-id="@item.Sn" class="btn btn-outline-secondary">詳情</a>
+                            <a asp-action="Edit" asp-route-id="@item.Sn" class="btn btn-outline-primary">編輯</a>
+                            <a asp-action="Delete" asp-route-id="@item.Sn" class="btn btn-outline-danger">刪除</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

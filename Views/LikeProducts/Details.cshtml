@@ -1,0 +1,50 @@
+@model EsunBank.FinancialProducts.ViewModels.LikeProductListItemViewModel
+
+@{
+    ViewData["Title"] = "喜好金融商品詳細資料";
+}
+
+<div class="d-flex align-items-center justify-content-between gap-3 mb-4">
+    <h1 class="h3 mb-0">喜好金融商品詳細資料</h1>
+    <div class="d-flex gap-2">
+        <a asp-action="Edit" asp-route-id="@Model.Sn" class="btn btn-primary">編輯</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">返回清單</a>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] is string successMessage)
+{
+    <div class="alert alert-success" role="alert">@successMessage</div>
+}
+
+<dl class="row">
+    <dt class="col-sm-3">使用者</dt>
+    <dd class="col-sm-9">@Model.UserName (@Model.UserId)</dd>
+
+    <dt class="col-sm-3">使用者 Email</dt>
+    <dd class="col-sm-9">@Model.Email</dd>
+
+    <dt class="col-sm-3">使用者預設帳號</dt>
+    <dd class="col-sm-9">@Model.DefaultAccount</dd>
+
+    <dt class="col-sm-3">本次扣款帳號</dt>
+    <dd class="col-sm-9">@Model.DebitAccount</dd>
+
+    <dt class="col-sm-3">產品名稱</dt>
+    <dd class="col-sm-9">@Model.ProductName</dd>
+
+    <dt class="col-sm-3">產品價格</dt>
+    <dd class="col-sm-9">@Model.Price.ToString("N2")</dd>
+
+    <dt class="col-sm-3">手續費率</dt>
+    <dd class="col-sm-9">@Model.FeeRate.ToString("P2")</dd>
+
+    <dt class="col-sm-3">購買數量</dt>
+    <dd class="col-sm-9">@Model.PurchaseQuantity</dd>
+
+    <dt class="col-sm-3">總手續費</dt>
+    <dd class="col-sm-9">@Model.TotalFee.ToString("N2")</dd>
+
+    <dt class="col-sm-3">預計扣款總金額</dt>
+    <dd class="col-sm-9">@Model.TotalAmount.ToString("N2")</dd>
+</dl>
