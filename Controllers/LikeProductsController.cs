@@ -28,7 +28,7 @@ public sealed class LikeProductsController(ILikeProductService likeProductServic
             return View(model);
         }
 
-        var sn = await likeProductService.CreateAsync(model);
+        var sn = await likeProductService.CreateAsync(MapInfo(model));
         TempData["SuccessMessage"] = "喜好金融商品已新增。";
         return RedirectToAction(nameof(Details), new { id = sn });
     }
@@ -61,7 +61,7 @@ public sealed class LikeProductsController(ILikeProductService likeProductServic
             return View(model);
         }
 
-        await likeProductService.UpdateAsync(id, model);
+        await likeProductService.UpdateAsync(id, MapInfo(model));
         TempData["SuccessMessage"] = "喜好金融商品已更新。";
         return RedirectToAction(nameof(Details), new { id });
     }
@@ -77,8 +77,26 @@ public sealed class LikeProductsController(ILikeProductService likeProductServic
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        await likeProductService.DeleteAsync(id);
+        var isDeleted = await likeProductService.DeleteAsync(id);
+        if (!isDeleted)
+        {
+            return NotFound();
+        }
+
         TempData["SuccessMessage"] = "喜好金融商品已刪除。";
         return RedirectToAction(nameof(Index));
+    }
+
+    private static LikeProductInfo MapInfo(LikeProductFormViewModel model)
+    {
+        return new LikeProductInfo
+        {
+            UserId = model.UserId,
+            ProductName = model.ProductName,
+            Price = model.Price,
+            FeeRate = model.FeeRate,
+            Account = model.Account,
+            PurchaseQuantity = model.PurchaseQuantity
+        };
     }
 }

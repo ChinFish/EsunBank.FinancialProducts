@@ -33,6 +33,7 @@ CREATE TABLE dbo.Users
     Account NVARCHAR(20) NOT NULL,
     CONSTRAINT PK_Users PRIMARY KEY (UserId),
     CONSTRAINT CK_Users_Account_Numeric CHECK (Account NOT LIKE '%[^0-9]%'),
+    CONSTRAINT CK_Users_Account_Length CHECK (LEN(Account) BETWEEN 6 AND 20),
     CONSTRAINT CK_Users_Email_NotBlank CHECK (LEN(LTRIM(RTRIM(Email))) > 0)
 );
 GO
@@ -46,6 +47,7 @@ CREATE TABLE dbo.Products
     CreatedAt DATETIME2(0) NOT NULL CONSTRAINT DF_Products_CreatedAt DEFAULT SYSUTCDATETIME(),
     UpdatedAt DATETIME2(0) NULL,
     CONSTRAINT PK_Products PRIMARY KEY (No),
+    CONSTRAINT CK_Products_ProductName_NotBlank CHECK (LEN(LTRIM(RTRIM(ProductName))) > 0),
     CONSTRAINT CK_Products_Price_Positive CHECK (Price > 0),
     CONSTRAINT CK_Products_FeeRate_Range CHECK (FeeRate >= 0 AND FeeRate <= 1)
 );
@@ -67,6 +69,7 @@ CREATE TABLE dbo.LikeLists
     CONSTRAINT FK_LikeLists_Products FOREIGN KEY (ProductNo) REFERENCES dbo.Products(No),
     CONSTRAINT CK_LikeLists_Quantity_Positive CHECK (PurchaseQuantity > 0),
     CONSTRAINT CK_LikeLists_Account_Numeric CHECK (Account NOT LIKE '%[^0-9]%'),
+    CONSTRAINT CK_LikeLists_Account_Length CHECK (LEN(Account) BETWEEN 6 AND 20),
     CONSTRAINT CK_LikeLists_TotalFee_NonNegative CHECK (TotalFee >= 0),
     CONSTRAINT CK_LikeLists_TotalAmount_Positive CHECK (TotalAmount > 0)
 );

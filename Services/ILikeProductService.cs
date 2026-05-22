@@ -14,9 +14,9 @@ public interface ILikeProductService
 
     Task<LikeProductListItemViewModel?> GetDetailAsync(int sn);
 
-    Task<int> CreateAsync(LikeProductFormViewModel form);
+    Task<int> CreateAsync(LikeProductInfo info);
 
-    Task UpdateAsync(int sn, LikeProductFormViewModel form);
+    Task UpdateAsync(int sn, LikeProductInfo info);
 
-    Task DeleteAsync(int sn);
+    Task<bool> DeleteAsync(int sn);
 }

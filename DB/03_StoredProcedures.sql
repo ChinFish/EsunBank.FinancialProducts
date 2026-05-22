@@ -83,14 +83,28 @@ BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
 
+    SET @UserId = LTRIM(RTRIM(@UserId));
+    SET @ProductName = LTRIM(RTRIM(@ProductName));
+    SET @Account = LTRIM(RTRIM(@Account));
+
     IF NOT EXISTS (SELECT 1 FROM dbo.Users WHERE UserId = @UserId)
     BEGIN
         THROW 50001, 'User does not exist.', 1;
     END
 
+    IF @ProductName IS NULL OR LEN(@ProductName) = 0
+    BEGIN
+        THROW 50002, 'Product name is required.', 1;
+    END
+
     IF @Price <= 0 OR @FeeRate < 0 OR @FeeRate > 1 OR @PurchaseQuantity <= 0
     BEGIN
-        THROW 50002, 'Invalid product price, fee rate, or purchase quantity.', 1;
+        THROW 50003, 'Invalid product price, fee rate, or purchase quantity.', 1;
+    END
+
+    IF @Account IS NULL OR LEN(@Account) NOT BETWEEN 6 AND 20 OR @Account LIKE '%[^0-9]%'
+    BEGIN
+        THROW 50004, 'Invalid debit account.', 1;
     END
 
     DECLARE @ProductNo INT;
@@ -130,14 +144,28 @@ BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
 
+    SET @UserId = LTRIM(RTRIM(@UserId));
+    SET @ProductName = LTRIM(RTRIM(@ProductName));
+    SET @Account = LTRIM(RTRIM(@Account));
+
     IF NOT EXISTS (SELECT 1 FROM dbo.Users WHERE UserId = @UserId)
     BEGIN
         THROW 50001, 'User does not exist.', 1;
     END
 
+    IF @ProductName IS NULL OR LEN(@ProductName) = 0
+    BEGIN
+        THROW 50002, 'Product name is required.', 1;
+    END
+
     IF @Price <= 0 OR @FeeRate < 0 OR @FeeRate > 1 OR @PurchaseQuantity <= 0
     BEGIN
-        THROW 50002, 'Invalid product price, fee rate, or purchase quantity.', 1;
+        THROW 50003, 'Invalid product price, fee rate, or purchase quantity.', 1;
+    END
+
+    IF @Account IS NULL OR LEN(@Account) NOT BETWEEN 6 AND 20 OR @Account LIKE '%[^0-9]%'
+    BEGIN
+        THROW 50004, 'Invalid debit account.', 1;
     END
 
     DECLARE @ProductNo INT;
@@ -151,7 +179,7 @@ BEGIN
 
     IF @ProductNo IS NULL
     BEGIN
-        THROW 50003, 'Like product does not exist.', 1;
+        THROW 50005, 'Like product does not exist.', 1;
     END
 
     BEGIN TRANSACTION;

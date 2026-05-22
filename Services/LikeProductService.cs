@@ -63,19 +63,26 @@ public sealed class LikeProductService(ILikeProductRepository repository) : ILik
         return detail is null ? null : MapListItem(detail);
     }
 
-    public Task<int> CreateAsync(LikeProductFormViewModel form)
+    public Task<int> CreateAsync(LikeProductInfo info)
     {
-        return repository.CreateAsync(MapCommand(form));
+        return repository.CreateAsync(MapCommand(info));
     }
 
-    public Task UpdateAsync(int sn, LikeProductFormViewModel form)
+    public Task UpdateAsync(int sn, LikeProductInfo info)
     {
-        return repository.UpdateAsync(sn, MapCommand(form));
+        return repository.UpdateAsync(sn, MapCommand(info));
     }
 
-    public Task DeleteAsync(int sn)
+    public async Task<bool> DeleteAsync(int sn)
     {
-        return repository.DeleteAsync(sn);
+        var detail = await repository.GetDetailAsync(sn);
+        if (detail is null)
+        {
+            return false;
+        }
+
+        await repository.DeleteAsync(sn);
+        return true;
     }
 
     private static UserOptionViewModel MapUser(UserOptionDto user)
@@ -109,16 +116,16 @@ public sealed class LikeProductService(ILikeProductRepository repository) : ILik
         };
     }
 
-    private static LikeProductCommand MapCommand(LikeProductFormViewModel form)
+    private static LikeProductCommand MapCommand(LikeProductInfo info)
     {
         return new LikeProductCommand
         {
-            UserId = form.UserId.Trim(),
-            ProductName = form.ProductName.Trim(),
-            Price = form.Price,
-            FeeRate = form.FeeRate,
-            Account = form.Account.Trim(),
-            PurchaseQuantity = form.PurchaseQuantity
+            UserId = info.UserId.Trim(),
+            ProductName = info.ProductName.Trim(),
+            Price = info.Price,
+            FeeRate = info.FeeRate,
+            Account = info.Account.Trim(),
+            PurchaseQuantity = info.PurchaseQuantity
         };
     }
 }

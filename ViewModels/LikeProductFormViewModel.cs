@@ -12,6 +12,7 @@ public sealed class LikeProductFormViewModel
 
     [Display(Name = "產品名稱")]
     [Required(ErrorMessage = "請輸入產品名稱")]
+    [RegularExpression(@".*\S.*", ErrorMessage = "產品名稱不可只有空白")]
     [StringLength(100, ErrorMessage = "產品名稱不可超過 100 個字")]
     public string ProductName { get; set; } = string.Empty;
 
