@@ -1,14 +1,10 @@
-using EsunBank.FinancialProducts.Data;
-using EsunBank.FinancialProducts.Repositories;
 using EsunBank.FinancialProducts.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>();
-builder.Services.AddScoped<ILikeProductRepository, LikeProductRepository>();
-builder.Services.AddScoped<ILikeProductService, LikeProductService>();
+builder.Services.AddFinancialProductServices();
 
 var app = builder.Build();
 

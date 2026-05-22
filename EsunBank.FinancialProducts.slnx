@@ -1,3 +1,5 @@
 <Solution>
-  <Project Path="EsunBank.FinancialProducts.csproj" />
+  <Project Path="EsunBank.FinancialProducts.Web/EsunBank.FinancialProducts.Web.csproj" />
+  <Project Path="EsunBank.FinancialProducts.Service/EsunBank.FinancialProducts.Service.csproj" />
+  <Project Path="EsunBank.FinancialProducts.Repository/EsunBank.FinancialProducts.Repository.csproj" />
 </Solution>

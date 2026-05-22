@@ -1,22 +1,21 @@
 using EsunBank.FinancialProducts.Repositories;
-using EsunBank.FinancialProducts.ViewModels;
 
 namespace EsunBank.FinancialProducts.Services;
 
 public sealed class LikeProductService(ILikeProductRepository repository) : ILikeProductService
 {
-    public async Task<IReadOnlyList<UserOptionViewModel>> GetUsersAsync()
+    public async Task<IReadOnlyList<UserOptionResult>> GetUsersAsync()
     {
         var users = await repository.GetUsersAsync();
         return users.Select(MapUser).ToList();
     }
 
-    public async Task<LikeProductIndexViewModel> GetIndexAsync(string? userId)
+    public async Task<LikeProductIndexResult> GetIndexAsync(string? userId)
     {
         var users = await repository.GetUsersAsync();
         var items = await repository.GetListAsync(userId);
 
-        return new LikeProductIndexViewModel
+        return new LikeProductIndexResult
         {
             SelectedUserId = userId,
             Users = users.Select(MapUser).ToList(),
@@ -24,10 +23,10 @@ public sealed class LikeProductService(ILikeProductRepository repository) : ILik
         };
     }
 
-    public async Task<LikeProductFormViewModel> BuildCreateFormAsync()
+    public async Task<LikeProductFormResult> BuildCreateFormAsync()
     {
         var users = await GetUsersAsync();
-        return new LikeProductFormViewModel
+        return new LikeProductFormResult
         {
             Users = users,
             UserId = users.FirstOrDefault()?.UserId ?? string.Empty,
@@ -36,7 +35,7 @@ public sealed class LikeProductService(ILikeProductRepository repository) : ILik
         };
     }
 
-    public async Task<LikeProductFormViewModel?> BuildEditFormAsync(int sn)
+    public async Task<LikeProductFormResult?> BuildEditFormAsync(int sn)
     {
         var detail = await repository.GetDetailAsync(sn);
         if (detail is null)
@@ -44,7 +43,7 @@ public sealed class LikeProductService(ILikeProductRepository repository) : ILik
             return null;
         }
 
-        return new LikeProductFormViewModel
+        return new LikeProductFormResult
         {
             Sn = detail.Sn,
             UserId = detail.UserId,
@@ -57,7 +56,7 @@ public sealed class LikeProductService(ILikeProductRepository repository) : ILik
         };
     }
 
-    public async Task<LikeProductListItemViewModel?> GetDetailAsync(int sn)
+    public async Task<LikeProductResult?> GetDetailAsync(int sn)
     {
         var detail = await repository.GetDetailAsync(sn);
         return detail is null ? null : MapListItem(detail);
@@ -85,9 +84,9 @@ public sealed class LikeProductService(ILikeProductRepository repository) : ILik
         return true;
     }
 
-    private static UserOptionViewModel MapUser(UserOptionDto user)
+    private static UserOptionResult MapUser(UserOptionDto user)
     {
-        return new UserOptionViewModel
+        return new UserOptionResult
         {
             UserId = user.UserId,
             UserName = user.UserName,
@@ -96,9 +95,9 @@ public sealed class LikeProductService(ILikeProductRepository repository) : ILik
         };
     }
 
-    private static LikeProductListItemViewModel MapListItem(LikeProductDetailDto item)
+    private static LikeProductResult MapListItem(LikeProductDetailDto item)
     {
-        return new LikeProductListItemViewModel
+        return new LikeProductResult
         {
             Sn = item.Sn,
             UserId = item.UserId,
