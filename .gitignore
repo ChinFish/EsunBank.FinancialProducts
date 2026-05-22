@@ -1,0 +1,15 @@
+bin/
+obj/
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.db
+*.mdf
+*.ldf
+*.bak
+output/
+
+# Keep interview prompt files outside this repository.
+*.pdf
