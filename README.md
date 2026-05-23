@@ -36,9 +36,13 @@ EsunBank.FinancialProducts/
 │   └── wwwroot/      # CSS、JavaScript 與前端套件
 ├── EsunBank.FinancialProducts.Service/
 │   └── Services/     # 商業流程、資料 trim、service DTO mapping
-└── EsunBank.FinancialProducts.Repository/
-    ├── Data/         # SQL connection factory
-    └── Repositories/ # Dapper + Stored Procedure 呼叫
+├── EsunBank.FinancialProducts.Repository/
+│   ├── Data/         # SQL connection factory
+│   └── Repositories/ # Dapper + Stored Procedure 呼叫
+├── EsunBank.FinancialProducts.Common/
+│   └── EsunBank.FinancialProducts.Common.csproj
+└── EsunBank.FinancialProducts.Service.Tests/
+    └── LikeProductServiceTests.cs
 ```
 
 ## 架構說明
@@ -57,8 +61,20 @@ Browser
 - `Controllers` 負責 HTTP request/response、ModelState、TempData 與頁面導向。
 - `Services` 負責應用流程、資料 trim、service DTO mapping，不依賴 MVC ViewModel。
 - `Repositories` 只負責透過 Dapper 呼叫 Stored Procedure，不放畫面或商業流程。
+- `Common` 保留給跨展示層、業務層與資料層都合理共用的型別或工具；目前沒有必要的共用邏輯，因此不放 placeholder 程式碼。
 - `DB` 保存可重建資料庫的 SQL scripts，包含 schema、seed data 與 Stored Procedures。
-- 專案依賴方向固定為 `Web -> Service -> Repository`，Web 不直接引用 Repository。
+- 專案依賴方向固定為 `Web -> Service -> Repository`，Web 不直接引用 Repository；各層可引用 `Common`。
+
+部署語意上，本專案可對應為：
+
+```text
+Browser
+  -> Web Server: Kestrel / IIS Express / IIS
+  -> Application Server: ASP.NET Core MVC application
+  -> Database Server: SQL Server / LocalDB
+```
+
+take-home 範圍以可編譯、可 demo 的 MVC 分層與資料庫 CRUD 為主，因此未額外加入 Docker Compose 或 IIS 部署檔。
 
 ## 資料庫設計
 
