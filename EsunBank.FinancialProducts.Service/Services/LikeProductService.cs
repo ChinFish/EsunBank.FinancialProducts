@@ -62,14 +62,28 @@ public sealed class LikeProductService(ILikeProductRepository repository) : ILik
         return detail is null ? null : MapListItem(detail);
     }
 
-    public Task<int> CreateAsync(LikeProductInfo info)
+    public async Task<LikeProductSaveResult> CreateAsync(LikeProductInfo info)
     {
-        return repository.CreateAsync(MapCommand(info));
+        var validation = await ValidateAsync(info);
+        if (validation.Errors.Count > 0)
+        {
+            return LikeProductSaveResult.Failure(validation.Errors);
+        }
+
+        var sn = await repository.CreateAsync(validation.Command);
+        return LikeProductSaveResult.Success(sn);
     }
 
-    public Task UpdateAsync(int sn, LikeProductInfo info)
+    public async Task<LikeProductSaveResult> UpdateAsync(int sn, LikeProductInfo info)
     {
-        return repository.UpdateAsync(sn, MapCommand(info));
+        var validation = await ValidateAsync(info);
+        if (validation.Errors.Count > 0)
+        {
+            return LikeProductSaveResult.Failure(validation.Errors);
+        }
+
+        await repository.UpdateAsync(sn, validation.Command);
+        return LikeProductSaveResult.Success(sn);
     }
 
     public async Task<bool> DeleteAsync(int sn)
@@ -119,12 +133,43 @@ public sealed class LikeProductService(ILikeProductRepository repository) : ILik
     {
         return new LikeProductCommand
         {
-            UserId = info.UserId.Trim(),
-            ProductName = info.ProductName.Trim(),
+            UserId = info.UserId?.Trim() ?? string.Empty,
+            ProductName = info.ProductName?.Trim() ?? string.Empty,
             Price = info.Price,
             FeeRate = info.FeeRate,
-            Account = info.Account.Trim(),
+            Account = info.Account?.Trim() ?? string.Empty,
             PurchaseQuantity = info.PurchaseQuantity
+        };
+    }
+
+    private async Task<(LikeProductCommand Command, List<LikeProductValidationError> Errors)> ValidateAsync(
+        LikeProductInfo info)
+    {
+        var command = MapCommand(info);
+        var errors = new List<LikeProductValidationError>();
+
+        await ValidateBusinessRulesAsync(command, errors);
+
+        return (command, errors);
+    }
+
+    private async Task ValidateBusinessRulesAsync(
+        LikeProductCommand command,
+        List<LikeProductValidationError> errors)
+    {
+        var users = await repository.GetUsersAsync();
+        if (!users.Any(user => user.UserId == command.UserId))
+        {
+            errors.Add(CreateError(nameof(LikeProductInfo.UserId), "選擇的使用者不存在"));
+        }
+    }
+
+    private static LikeProductValidationError CreateError(string field, string message)
+    {
+        return new LikeProductValidationError
+        {
+            Field = field,
+            Message = message
         };
     }
 }

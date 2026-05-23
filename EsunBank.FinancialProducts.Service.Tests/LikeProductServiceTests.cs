@@ -120,22 +120,20 @@ public sealed class LikeProductServiceTests
     {
         var (service, repository) = CreateService();
         LikeProductCommand? capturedCommand = null;
+        repository.Setup(x => x.GetUsersAsync()).ReturnsAsync([CreateUser()]);
         repository
             .Setup(x => x.CreateAsync(It.IsAny<LikeProductCommand>()))
             .Callback<LikeProductCommand>(command => capturedCommand = command)
             .ReturnsAsync(99);
 
-        var result = await service.CreateAsync(new LikeProductInfo
-        {
-            UserId = " A1236456789 ",
-            ProductName = " ESUN Fund ",
-            Price = 1000m,
-            FeeRate = 0.01m,
-            Account = " 1111999666 ",
-            PurchaseQuantity = 2
-        });
+        var result = await service.CreateAsync(CreateInfo(
+            userId: " A1236456789 ",
+            productName: " ESUN Fund ",
+            account: " 1111999666 "));
 
-        result.Should().Be(99);
+        result.IsSuccess.Should().BeTrue();
+        result.Sn.Should().Be(99);
+        result.Errors.Should().BeEmpty();
         capturedCommand.Should().BeEquivalentTo(new
         {
             UserId = "A1236456789",
@@ -148,25 +146,45 @@ public sealed class LikeProductServiceTests
     }
 
     [Fact]
+    public async Task CreateAsync_WhenUserDoesNotExist_ShouldReturnValidationErrorAndNotCreate()
+    {
+        var (service, repository) = CreateService();
+        repository.Setup(x => x.GetUsersAsync()).ReturnsAsync([]);
+
+        var result = await service.CreateAsync(CreateInfo());
+
+        result.IsSuccess.Should().BeFalse();
+        result.Sn.Should().BeNull();
+        result.Errors.Should().ContainSingle().Which.Should().BeEquivalentTo(new
+        {
+            Field = nameof(LikeProductInfo.UserId),
+            Message = "選擇的使用者不存在"
+        });
+        repository.Verify(x => x.CreateAsync(It.IsAny<LikeProductCommand>()), Times.Never);
+    }
+
+    [Fact]
     public async Task UpdateAsync_ShouldPassSnAndTrimTextFields()
     {
         var (service, repository) = CreateService();
         LikeProductCommand? capturedCommand = null;
+        repository.Setup(x => x.GetUsersAsync()).ReturnsAsync([CreateUser()]);
         repository
             .Setup(x => x.UpdateAsync(10, It.IsAny<LikeProductCommand>()))
             .Callback<int, LikeProductCommand>((_, command) => capturedCommand = command)
             .Returns(Task.CompletedTask);
 
-        await service.UpdateAsync(10, new LikeProductInfo
-        {
-            UserId = " A1236456789 ",
-            ProductName = " Updated Fund ",
-            Price = 2000m,
-            FeeRate = 0.02m,
-            Account = " 1111999666 ",
-            PurchaseQuantity = 3
-        });
+        var result = await service.UpdateAsync(10, CreateInfo(
+            userId: " A1236456789 ",
+            productName: " Updated Fund ",
+            price: 2000m,
+            feeRate: 0.02m,
+            account: " 1111999666 ",
+            purchaseQuantity: 3));
 
+        result.IsSuccess.Should().BeTrue();
+        result.Sn.Should().Be(10);
+        result.Errors.Should().BeEmpty();
         capturedCommand.Should().BeEquivalentTo(new
         {
             UserId = "A1236456789",
@@ -242,6 +260,25 @@ public sealed class LikeProductServiceTests
             PurchaseQuantity = 2,
             TotalFee = 20m,
             TotalAmount = 2020m
+        };
+    }
+
+    private static LikeProductInfo CreateInfo(
+        string userId = "A1236456789",
+        string productName = "ESUN Fund",
+        decimal price = 1000m,
+        decimal feeRate = 0.01m,
+        string account = "1111999666",
+        int purchaseQuantity = 2)
+    {
+        return new LikeProductInfo
+        {
+            UserId = userId,
+            ProductName = productName,
+            Price = price,
+            FeeRate = feeRate,
+            Account = account,
+            PurchaseQuantity = purchaseQuantity
         };
     }
 }

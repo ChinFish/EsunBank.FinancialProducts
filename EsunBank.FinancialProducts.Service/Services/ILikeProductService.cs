@@ -12,9 +12,9 @@ public interface ILikeProductService
 
     Task<LikeProductResult?> GetDetailAsync(int sn);
 
-    Task<int> CreateAsync(LikeProductInfo info);
+    Task<LikeProductSaveResult> CreateAsync(LikeProductInfo info);
 
-    Task UpdateAsync(int sn, LikeProductInfo info);
+    Task<LikeProductSaveResult> UpdateAsync(int sn, LikeProductInfo info);
 
     Task<bool> DeleteAsync(int sn);
 }

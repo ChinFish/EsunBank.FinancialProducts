@@ -35,7 +35,7 @@ EsunBank.FinancialProducts/
 │   ├── Views/        # Razor 畫面
 │   └── wwwroot/      # CSS、JavaScript 與前端套件
 ├── EsunBank.FinancialProducts.Service/
-│   └── Services/     # 商業流程、資料 trim、service DTO mapping
+│   └── Services/     # 商業流程、業務驗證、資料 trim、service DTO mapping
 ├── EsunBank.FinancialProducts.Repository/
 │   ├── Data/         # SQL connection factory
 │   └── Repositories/ # Dapper + Stored Procedure 呼叫
@@ -59,7 +59,7 @@ Browser
 ```
 
 - `Controllers` 負責 HTTP request/response、ModelState、TempData 與頁面導向。
-- `Services` 負責應用流程、資料 trim、service DTO mapping，不依賴 MVC ViewModel。
+- `Services` 負責應用流程、可測試的業務驗證、資料 trim、service DTO mapping，不依賴 MVC ViewModel。
 - `Repositories` 只負責透過 Dapper 呼叫 Stored Procedure，不放畫面或商業流程。
 - `Common` 保留給跨展示層、業務層與資料層都合理共用的型別或工具；目前沒有必要的共用邏輯，因此不放 placeholder 程式碼。
 - `DB` 保存可重建資料庫的 SQL scripts，包含 schema、seed data 與 Stored Procedures。
@@ -161,8 +161,9 @@ dotnet run --project .\EsunBank.FinancialProducts.Web\EsunBank.FinancialProducts
 - POST actions 使用 `[ValidateAntiForgeryToken]`。
 - Razor 預設 HTML encoding，降低 XSS 風險。
 - 表單使用 DataAnnotations 驗證。
+- Service layer 處理需要查資料的業務驗證，例如使用者是否存在；欄位格式由 ViewModel/DataAnnotations 與資料庫約束防護。
 - Repository 透過 Dapper 參數化呼叫 Stored Procedure，不拼接 SQL 字串。
-- SQL table constraints 與 Stored Procedure 會再次檢查金額、費率、數量與扣款帳號格式。
+- SQL table constraints 與 Stored Procedure 會再次檢查金額、費率、數量與扣款帳號格式，作為資料庫層最後防線。
 - Stored Procedure 使用 transaction 處理 Products 與 LikeLists 的一致性。
 
 ## 實作取捨
@@ -170,4 +171,4 @@ dotnet run --project .\EsunBank.FinancialProducts.Web\EsunBank.FinancialProducts
 - 為了符合題目要求與保持範圍單純，本專案使用 Dapper + Stored Procedure，未引入 Entity Framework。
 - 每筆喜好清單建立一筆商品資料，修改喜好資料時也同步更新該商品資料，用來展示多表 transaction。
 - 刪除喜好清單時，若商品未被其他喜好清單使用，會一併刪除商品資料。
-- 目前以 take-home demo 為主，尚未加入登入授權、自動化測試與 production 等級的錯誤處理。
+- 目前以 take-home demo 為主，已加入 service layer 單元測試；尚未加入登入授權、完整 integration tests 與 production 等級的錯誤處理。

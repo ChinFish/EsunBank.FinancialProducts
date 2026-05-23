@@ -28,9 +28,16 @@ public sealed class LikeProductsController(ILikeProductService likeProductServic
             return View(model);
         }
 
-        var sn = await likeProductService.CreateAsync(MapInfo(model));
+        var result = await likeProductService.CreateAsync(MapInfo(model));
+        if (!result.IsSuccess)
+        {
+            AddServiceErrors(result.Errors);
+            model.Users = await GetUserViewModelsAsync();
+            return View(model);
+        }
+
         TempData["SuccessMessage"] = "喜好金融商品已新增。";
-        return RedirectToAction(nameof(Details), new { id = sn });
+        return RedirectToAction(nameof(Details), new { id = result.Sn!.Value });
     }
 
     public async Task<IActionResult> Details(int id)
@@ -61,7 +68,15 @@ public sealed class LikeProductsController(ILikeProductService likeProductServic
             return View(model);
         }
 
-        await likeProductService.UpdateAsync(id, MapInfo(model));
+        var result = await likeProductService.UpdateAsync(id, MapInfo(model));
+        if (!result.IsSuccess)
+        {
+            AddServiceErrors(result.Errors);
+            model.Sn = id;
+            model.Users = await GetUserViewModelsAsync();
+            return View(model);
+        }
+
         TempData["SuccessMessage"] = "喜好金融商品已更新。";
         return RedirectToAction(nameof(Details), new { id });
     }
@@ -160,5 +175,13 @@ public sealed class LikeProductsController(ILikeProductService likeProductServic
             Account = model.Account,
             PurchaseQuantity = model.PurchaseQuantity
         };
+    }
+
+    private void AddServiceErrors(IReadOnlyList<LikeProductValidationError> errors)
+    {
+        foreach (var error in errors)
+        {
+            ModelState.AddModelError(error.Field, error.Message);
+        }
     }
 }
