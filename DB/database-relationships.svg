@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">EsunBankFinancialProducts Database Relationships</title>
+  <desc id="desc">Entity relationship diagram for Users, Products, and LikeLists tables.</desc>
+  <defs>
+    <style>
+      .canvas { fill: #f7f8fb; }
+      .title { fill: #172033; font: 700 30px "Segoe UI", Arial, sans-serif; }
+      .subtitle { fill: #5b6475; font: 16px "Segoe UI", Arial, sans-serif; }
+      .table { fill: #ffffff; stroke: #c9d2e3; stroke-width: 2; rx: 8; }
+      .table-header { fill: #1f4e79; }
+      .table-header.product { fill: #28615c; }
+      .table-header.like { fill: #6c4a91; }
+      .table-name { fill: #ffffff; font: 700 20px "Segoe UI", Arial, sans-serif; }
+      .column { fill: #1f2937; font: 15px Consolas, "Segoe UI", monospace; }
+      .column-muted { fill: #5b6475; font: 14px Consolas, "Segoe UI", monospace; }
+      .pk { fill: #fff5cc; stroke: #d6a500; stroke-width: 1; }
+      .fk { fill: #eaf3ff; stroke: #78a6d8; stroke-width: 1; }
+      .relationship { fill: none; stroke: #344054; stroke-width: 2.5; }
+      .rel-label { fill: #172033; font: 700 16px "Segoe UI", Arial, sans-serif; }
+      .rel-note { fill: #5b6475; font: 14px "Segoe UI", Arial, sans-serif; }
+      .legend-box { fill: #ffffff; stroke: #d7deea; stroke-width: 1.5; rx: 8; }
+      .legend-text { fill: #344054; font: 14px "Segoe UI", Arial, sans-serif; }
+      .note { fill: #475467; font: 14px "Segoe UI", Arial, sans-serif; }
+    </style>
+  </defs>
+
+  <rect class="canvas" width="1280" height="760" />
+
+  <text class="title" x="64" y="64">EsunBankFinancialProducts - Database Relationships</text>
+  <text class="subtitle" x="64" y="92">Source: DB/01_CreateDatabaseAndTables.sql</text>
+
+  <!-- Users -->
+  <rect class="table" x="64" y="160" width="330" height="250" />
+  <rect class="table-header" x="64" y="160" width="330" height="54" rx="8" />
+  <text class="table-name" x="88" y="194">dbo.Users</text>
+
+  <rect class="pk" x="86" y="236" width="286" height="34" rx="5" />
+  <text class="column" x="100" y="258">PK  UserId NVARCHAR(20)</text>
+  <text class="column" x="100" y="305">    UserName NVARCHAR(50)</text>
+  <text class="column" x="100" y="342">    Email NVARCHAR(256)</text>
+  <text class="column" x="100" y="379">    Account NVARCHAR(20)</text>
+
+  <!-- LikeLists -->
+  <rect class="table" x="475" y="130" width="360" height="500" />
+  <rect class="table-header like" x="475" y="130" width="360" height="54" rx="8" />
+  <text class="table-name" x="499" y="164">dbo.LikeLists</text>
+
+  <rect class="pk" x="497" y="206" width="316" height="34" rx="5" />
+  <text class="column" x="511" y="228">PK  SN INT IDENTITY</text>
+  <rect class="fk" x="497" y="254" width="316" height="34" rx="5" />
+  <text class="column" x="511" y="276">FK  UserId NVARCHAR(20)</text>
+  <rect class="fk" x="497" y="302" width="316" height="34" rx="5" />
+  <text class="column" x="511" y="324">FK  ProductNo INT</text>
+  <text class="column" x="511" y="371">    PurchaseQuantity INT</text>
+  <text class="column" x="511" y="408">    Account NVARCHAR(20)</text>
+  <text class="column" x="511" y="445">    TotalFee DECIMAL(18,2)</text>
+  <text class="column" x="511" y="482">    TotalAmount DECIMAL(18,2)</text>
+  <text class="column" x="511" y="519">    CreatedAt DATETIME2(0)</text>
+  <text class="column" x="511" y="556">    UpdatedAt DATETIME2(0)</text>
+  <text class="column-muted" x="511" y="598">IX: UserId, ProductNo</text>
+
+  <!-- Products -->
+  <rect class="table" x="918" y="160" width="330" height="330" />
+  <rect class="table-header product" x="918" y="160" width="330" height="54" rx="8" />
+  <text class="table-name" x="942" y="194">dbo.Products</text>
+
+  <rect class="pk" x="940" y="236" width="286" height="34" rx="5" />
+  <text class="column" x="954" y="258">PK  No INT IDENTITY</text>
+  <text class="column" x="954" y="305">    ProductName NVARCHAR(100)</text>
+  <text class="column" x="954" y="342">    Price DECIMAL(18,2)</text>
+  <text class="column" x="954" y="379">    FeeRate DECIMAL(9,4)</text>
+  <text class="column" x="954" y="416">    CreatedAt DATETIME2(0)</text>
+  <text class="column" x="954" y="453">    UpdatedAt DATETIME2(0)</text>
+
+  <!-- Relationships -->
+  <path class="relationship" d="M394 253 L475 271" />
+  <text class="rel-label" x="410" y="242">1</text>
+  <text class="rel-label" x="451" y="294">N</text>
+  <text class="rel-note" x="360" y="222">FK_LikeLists_Users</text>
+
+  <path class="relationship" d="M918 253 L835 319" />
+  <text class="rel-label" x="895" y="242">1</text>
+  <text class="rel-label" x="846" y="345">N</text>
+  <text class="rel-note" x="845" y="222">FK_LikeLists_Products</text>
+
+  <!-- Legend -->
+  <rect class="legend-box" x="64" y="650" width="520" height="64" />
+  <rect class="pk" x="88" y="672" width="28" height="18" rx="3" />
+  <text class="legend-text" x="126" y="687">Primary key</text>
+  <rect class="fk" x="240" y="672" width="28" height="18" rx="3" />
+  <text class="legend-text" x="278" y="687">Foreign key</text>
+  <line class="relationship" x1="402" y1="681" x2="462" y2="681" />
+  <text class="legend-text" x="476" y="687">1:N relationship</text>
+
+  <text class="note" x="650" y="675">LikeLists.UserId references Users.UserId.</text>
+  <text class="note" x="650" y="704">LikeLists.ProductNo references Products.No.</text>
+</svg>
