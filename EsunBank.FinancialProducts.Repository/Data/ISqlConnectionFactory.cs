@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace EsunBank.FinancialProducts.Data;
+namespace EsunBank.FinancialProducts.Repository.Data;
 
 public interface ISqlConnectionFactory
 {

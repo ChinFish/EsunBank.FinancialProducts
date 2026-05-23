@@ -1,6 +1,6 @@
-using EsunBank.FinancialProducts.Repositories;
+using EsunBank.FinancialProducts.Repository.Repositories;
 
-namespace EsunBank.FinancialProducts.Services;
+namespace EsunBank.FinancialProducts.Service.Services;
 
 public sealed class LikeProductService(ILikeProductRepository repository) : ILikeProductService
 {

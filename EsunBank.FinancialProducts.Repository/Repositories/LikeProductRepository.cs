@@ -1,8 +1,8 @@
 using System.Data;
 using Dapper;
-using EsunBank.FinancialProducts.Data;
+using EsunBank.FinancialProducts.Repository.Data;
 
-namespace EsunBank.FinancialProducts.Repositories;
+namespace EsunBank.FinancialProducts.Repository.Repositories;
 
 public sealed class LikeProductRepository(ISqlConnectionFactory connectionFactory) : ILikeProductRepository
 {

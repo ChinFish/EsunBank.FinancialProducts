@@ -1,4 +1,4 @@
-using EsunBank.FinancialProducts.Services;
+using EsunBank.FinancialProducts.Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

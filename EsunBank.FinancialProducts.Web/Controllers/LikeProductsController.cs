@@ -1,8 +1,8 @@
-using EsunBank.FinancialProducts.Services;
-using EsunBank.FinancialProducts.ViewModels;
+using EsunBank.FinancialProducts.Service.Services;
+using EsunBank.FinancialProducts.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EsunBank.FinancialProducts.Controllers;
+namespace EsunBank.FinancialProducts.Web.Controllers;
 
 public sealed class LikeProductsController(ILikeProductService likeProductService) : Controller
 {

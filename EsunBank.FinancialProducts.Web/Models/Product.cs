@@ -1,4 +1,4 @@
-namespace EsunBank.FinancialProducts.Models;
+namespace EsunBank.FinancialProducts.Web.Models;
 
 public sealed class Product
 {

@@ -1,4 +1,4 @@
-namespace EsunBank.FinancialProducts.Repositories;
+namespace EsunBank.FinancialProducts.Repository.Repositories;
 
 public sealed class UserOptionDto
 {

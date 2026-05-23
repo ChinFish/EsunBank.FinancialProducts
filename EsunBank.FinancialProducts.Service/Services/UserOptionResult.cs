@@ -1,4 +1,4 @@
-namespace EsunBank.FinancialProducts.Services;
+namespace EsunBank.FinancialProducts.Service.Services;
 
 public sealed class UserOptionResult
 {

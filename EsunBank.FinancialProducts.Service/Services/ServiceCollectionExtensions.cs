@@ -1,8 +1,8 @@
-using EsunBank.FinancialProducts.Data;
-using EsunBank.FinancialProducts.Repositories;
+using EsunBank.FinancialProducts.Repository.Data;
+using EsunBank.FinancialProducts.Repository.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EsunBank.FinancialProducts.Services;
+namespace EsunBank.FinancialProducts.Service.Services;
 
 public static class ServiceCollectionExtensions
 {

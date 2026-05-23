@@ -2,7 +2,7 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
-namespace EsunBank.FinancialProducts.Data;
+namespace EsunBank.FinancialProducts.Repository.Data;
 
 public sealed class SqlConnectionFactory(IConfiguration configuration) : ISqlConnectionFactory
 {

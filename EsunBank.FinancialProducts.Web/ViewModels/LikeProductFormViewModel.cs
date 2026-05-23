@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace EsunBank.FinancialProducts.ViewModels;
+namespace EsunBank.FinancialProducts.Web.ViewModels;
 
 public sealed class LikeProductFormViewModel
 {

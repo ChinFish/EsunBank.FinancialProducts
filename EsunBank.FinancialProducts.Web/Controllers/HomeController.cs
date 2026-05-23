@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using EsunBank.FinancialProducts.Models;
+using EsunBank.FinancialProducts.Web.Models;
 
-namespace EsunBank.FinancialProducts.Controllers;
+namespace EsunBank.FinancialProducts.Web.Controllers;
 
 public class HomeController : Controller
 {
